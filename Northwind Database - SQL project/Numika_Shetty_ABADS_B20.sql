@@ -186,4 +186,4 @@ select ProductName
 from products p
 where p.ProductID NOT IN (
 							select distinct ProductID from orderdetails
-						 )
+						 );
