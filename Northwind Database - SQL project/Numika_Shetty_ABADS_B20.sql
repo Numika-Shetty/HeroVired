@@ -64,8 +64,8 @@ where Price > 50;
 -- Write your SQL solution here
 select c.CustomerName , e.FirstName , e.LastName
 from orders o
-inner join employees e on e.EmployeeID = o.EmployeeID
-inner join customers c on c.CustomerID = o.CustomerID;
+join employees e on e.EmployeeID = o.EmployeeID
+join customers c on c.CustomerID = o.CustomerID;
 
 -- Question 7 (Marks: 3)
 -- Objective: Use GROUP BY for aggregation
@@ -86,8 +86,8 @@ group by Country;
 -- Write your SQL solution here
 select c.CategoryName , avg(p.Price) as 'AvgPrice'
 from products p
-inner join categories c on c.CategoryID = p.CategoryID
-group by c.CategoryName;
+join categories c on c.CategoryID = p.CategoryID
+group by c.CategoryID;
 
 -- Question 9 (Marks: 3)
 -- Objective: Use aggregation to count records per group
@@ -97,7 +97,7 @@ group by c.CategoryName;
 -- Write your SQL solution here
 select e.EmployeeID , count(OrderID) as 'OrderCount'
 from employees e
-inner join orders o on o.EmployeeID = e.EmployeeID
+join orders o on o.EmployeeID = e.EmployeeID
 group by e.EmployeeID ;
 
 -- Question 10 (Marks: 3)
@@ -108,7 +108,7 @@ group by e.EmployeeID ;
 -- Write your SQL solution here
 select ProductName
 from products p
-inner join suppliers s on s.SupplierID = p.SupplierID
+join suppliers s on s.SupplierID = p.SupplierID
 where s.SupplierName ='Exotic Liquid';
 
 -- Question 11 (Marks: 5)
@@ -132,10 +132,10 @@ LIMIT 3;
 -- Write your SQL solution here
 select c.CustomerName , sum(od.Quantity * p.price) as 'TotalSpent'
 from customers c
-inner join orders o on o.CustomerID = c.CustomerID
-inner join orderdetails od on od.OrderID = o.OrderID
-inner join products p on p.ProductID = od.ProductID
-group by CustomerName 
+join orders o on o.CustomerID = c.CustomerID
+join orderdetails od on od.OrderID = o.OrderID
+join products p on p.ProductID = od.ProductID
+group by c.CustomerID
 having TotalSpent > 10000;
 
 
@@ -147,7 +147,7 @@ having TotalSpent > 10000;
 -- Write your SQL solution here
 select od.OrderID , sum(od.Quantity * p.Price) as 'OrderValue'
 from orderdetails od 
-inner join products p on p.ProductID = od.ProductID
+join products p on p.ProductID = od.ProductID
 group by od.OrderID 
 having OrderValue > 2000;
 
@@ -160,17 +160,17 @@ having OrderValue > 2000;
 -- Write your SQL solution here
 select c.CustomerName, o.OrderID, SUM(od.Quantity * p.Price) AS TotalValue
 from orders o
-inner join customers c ON o.CustomerID = c.CustomerID
-inner join orderdetails od ON o.OrderID = od.OrderID
-inner join products p ON od.ProductID = p.ProductID
-group by o.OrderID, c.CustomerName
+join customers c ON o.CustomerID = c.CustomerID
+join orderdetails od ON o.OrderID = od.OrderID
+join products p ON od.ProductID = p.ProductID
+group by c.CustomerID , o.OrderID
 having TotalValue = (
 						select MAX(TotalOrder)
 						from (
 									select o.OrderID,SUM(od.Quantity * p.Price) AS TotalOrder
 									from orders o
-									inner join orderdetails od ON o.OrderID = od.OrderID
-									inner join products p ON od.ProductID = p.ProductID
+									join orderdetails od ON o.OrderID = od.OrderID
+									join products p ON od.ProductID = p.ProductID
 									group by o.OrderID
 							) AS TotalOrder
 );
